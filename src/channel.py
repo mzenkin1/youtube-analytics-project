@@ -1,20 +1,18 @@
 import json
 import os
-
-from googleapiclient import channel
 from googleapiclient.discovery import build
 
 
 class Channel:
     """Класс для ютуб-канала"""
-
-    api_key: str = os.getenv('YT_API_KEY')
-    youtube = build('youtube', 'v3', developerKey=api_key)
+    list_json = {}
 
     def __init__(self, channel_id: str) -> None:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
 
         self.channel_id = channel_id
+
+        channel = Channel.get_service().channels().list(id=channel_id, part='snippet,statistics').execute()
 
         self.title = channel['items'][0]['snippet']['title']
         self.description = channel['items'][0]['snippet']['description']
@@ -36,14 +34,8 @@ class Channel:
         object_get = build('youtube', 'v3', developerKey=api_key)
         return object_get
 
-    @classmethod
-    def get_service(cls):
-        api_key: str = os.getenv('YT_API_KEY')
-        youtube = build('youtube', 'v3', developerKey=api_key)
-        return youtube
-
     def to_json(self, moscowpython):
-        list_json = {}
+        list_json = self.list_json
         list_json['id'] = self.channel_id
         list_json['title'] = self.title
         list_json['description'] = self.description
