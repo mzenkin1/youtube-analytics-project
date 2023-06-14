@@ -3,14 +3,16 @@ import os
 from googleapiclient.discovery import build
 
 
+
 class Channel:
     """Класс для ютуб-канала"""
     list_json = {}
 
-    def __init__(self, channel_id: str) -> None:
+    def __init__(self, channel_id: str):
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
 
-        self.channel_id = channel_id
+        self.youtube = None
+        self.__channel_id = channel_id
 
         channel = Channel.get_service().channels().list(id=channel_id, part='snippet,statistics').execute()
 
@@ -20,6 +22,10 @@ class Channel:
         self.subscriber_count = channel['items'][0]['statistics']['subscriberCount']
         self.video_count = channel['items'][0]['statistics']['videoCount']
         self.views_count = channel['items'][0]['statistics']['viewCount']
+
+    @property
+    def channel_id(self):
+        return self.channel_id
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
@@ -34,9 +40,9 @@ class Channel:
         object_get = build('youtube', 'v3', developerKey=api_key)
         return object_get
 
-    def to_json(self, moscowpython):
+    def to_json(self, filename):
         list_json = self.list_json
-        list_json['id'] = self.channel_id
+        list_json['id'] = self.__channel_id
         list_json['title'] = self.title
         list_json['description'] = self.description
         list_json['url'] = self.url
@@ -44,5 +50,5 @@ class Channel:
         list_json['video_count'] = self.video_count
         list_json['views_count'] = self.views_count
 
-        with open('moscowpython.json', 'w', encoding='utf-8') as f:
+        with open(filename, 'w', encoding='utf-8') as f:
             json.dump(self.list_json, f, indent=2, ensure_ascii=False)
