@@ -23,6 +23,30 @@ class Channel:
         self.video_count = channel['items'][0]['statistics']['videoCount']
         self.views_count = channel['items'][0]['statistics']['viewCount']
 
+    def __str__(self):
+            return f'{self.title}, {self.url}'
+
+    def __add__(self, other):
+            return int(self.subscriber_count) + int(other.subscriberCount)
+
+    def __sub__(self, other):
+            return int(self.subscriber_count) - int(other.subscriberCount)
+
+    def __gt__(self, other):
+            return int(self.subscriber_count) > int(other.subscriberCount)
+
+    def __ge__(self, other):
+            return int(self.subscriber_count) >= int(other.subscriberCount)
+
+    def __lt__(self, other):
+            return int(self.subscriber_count) < int(other.subscriberCount)
+
+    def __le__(self, other):
+            return int(self.subscriber_count) <= int(other.subscriberCount)
+
+    def __eq__(self, other):
+            return int(self.subscriberCount) == int(other.subscriberCount)
+
     @property
     def channel_id(self):
         return self.channel_id
