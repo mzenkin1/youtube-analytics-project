@@ -45,7 +45,7 @@ class Channel:
             return int(self.subscriber_count) <= int(other.subscriberCount)
 
     def __eq__(self, other):
-            return int(self.subscriberCount) == int(other.subscriberCount)
+            return int(self.subscriber_count) == int(other.subscriberCount)
 
     @property
     def channel_id(self):
